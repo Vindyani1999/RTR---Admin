@@ -12,7 +12,7 @@ import HomePage from "../components/pages/HomePage";
 import LogoutPage from "../components/pages/Logout";
 import LoginPage from "../components/pages/LogIn";
 import NewAdminPage from "../components/pages/NewAdmin";
-import AllAdminsPage from "../components/pages/AllAdmins";
+import AllAdminsPage from "../components/pages/History copy";
 
 const AppRouter: React.FC = () => {
   return (
