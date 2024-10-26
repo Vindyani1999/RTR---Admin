@@ -23,7 +23,7 @@ export const drawerStyles = {
 export const profileIaconContainer = {
   width: "90%",
   backgroundColor: "rgba(0, 0, 0, 0.2)",
-  mt: 30,
+  mt: 20,
   borderRadius: 10,
   mx: 1,
   display: "flex",
