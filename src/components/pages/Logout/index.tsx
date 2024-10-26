@@ -1,10 +1,24 @@
 import React from "react";
 import { Box } from "@mui/material";
-import { homePageContainer } from "./styles";
-import Sidebar from "../../molecules/SideBar";
+import LogoutImg from "../../../assets/icons/Logout/logout.png";
+import SignUpComponent from "../../atoms/SignUpComponent/index";
 
-const HomePage: React.FC = () => {
-  return <Box sx={homePageContainer}></Box>;
+const LogoutPage: React.FC = () => {
+  const handleLogout = () => {
+    console.log("Logging out...");
+  };
+
+  return (
+    <Box>
+      <SignUpComponent
+        img={LogoutImg}
+        message="Before logging out, please ensure you have reviewed all important tasks and saved any changes."
+        buttonText="Logout"
+        onclick={handleLogout}
+        showFields={false} // Hide text fields for logout
+      />
+    </Box>
+  );
 };
 
-export default HomePage;
+export default LogoutPage;

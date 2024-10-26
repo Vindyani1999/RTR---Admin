@@ -1,14 +1,14 @@
 import React from "react";
 import { Box } from "@mui/material";
 import { homePageContainer } from "./styles";
-import TableSetup from "../../organisms/TableSetup";
+import AdminsTable from "../../organisms/AdminTable";
 
-const HomePage: React.FC = () => {
+const AllAdminPage: React.FC = () => {
   return (
     <Box sx={homePageContainer}>
-      <TableSetup />
+      <AdminsTable />
     </Box>
   );
 };
 
-export default HomePage;
+export default AllAdminPage;

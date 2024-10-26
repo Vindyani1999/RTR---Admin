@@ -16,6 +16,8 @@ import TableIcon from "@mui/icons-material/TableChart";
 import HistoryIcon from "@mui/icons-material/History";
 import PersonIcon from "@mui/icons-material/Person";
 import Logout from "@mui/icons-material/Logout";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import PeopleIcon from "@mui/icons-material/People";
 
 import Logo from "../../../assets/icons/Logo/logo.png";
 import { ROUTES } from "../../../constants/routeConstants";
@@ -84,6 +86,28 @@ const Sidebar = () => {
             <TableIcon />
           </ListItemIcon>
           <ListItemText> Table Setup</ListItemText>
+        </ListItem>
+        <ListItem
+          button
+          component={Link}
+          to={ROUTES.CREATE_ADMIN}
+          selected={location.pathname === ROUTES.CREATE_ADMIN}
+        >
+          <ListItemIcon>
+            <PersonAddIcon />
+          </ListItemIcon>
+          <ListItemText> Create Admin</ListItemText>
+        </ListItem>
+        <ListItem
+          button
+          component={Link}
+          to={ROUTES.ADMINS}
+          selected={location.pathname === ROUTES.ADMINS}
+        >
+          <ListItemIcon>
+            <PeopleIcon />
+          </ListItemIcon>
+          <ListItemText> Admin List</ListItemText>
         </ListItem>
 
         <ListItem

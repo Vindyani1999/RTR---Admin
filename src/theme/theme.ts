@@ -72,7 +72,7 @@ const theme = createTheme({
 export const themeAdmin = createTheme({
   typography: {
     fontFamily: "Raleway, sans-serif",
-    fontSize: 18,
+    fontSize: 16,
   },
   components: {
     MuiListItem: {

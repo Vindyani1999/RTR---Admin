@@ -4,6 +4,7 @@ import { Box } from "@mui/material";
 
 interface CustomButtonProps extends ButtonProps {
   label: string;
+  onClick?: () => void;
 }
 
 const CustomButton: React.FC<CustomButtonProps> = ({ label, ...props }) => {

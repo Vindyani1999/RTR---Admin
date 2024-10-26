@@ -1,4 +1,4 @@
-import React, { Dispatch } from "react";
+import React from "react";
 import { Box } from "@mui/material";
 import { useLocation } from "react-router-dom"; // Import useLocation to check the current route
 import { mainContainer, tableBox } from "./styles";
@@ -27,7 +27,6 @@ const getTableSVG = (
   type: string,
   status: string,
   price: number,
-  isSelected: boolean,
   route: string
 ) => {
   const filter = getColorFilter(status);
@@ -64,36 +63,28 @@ const getTableSVG = (
   }
 };
 
-interface TableProps {
-  selectedTable: any;
-  onTableSelect: Dispatch<any>;
-}
-
-const TableSetup: React.FC<TableProps> = ({ selectedTable, onTableSelect }) => {
+const TableSetup: React.FC = () => {
   const location = useLocation(); // Get the current route
 
   return (
     <Box sx={mainContainer}>
       {tables.map((table) => {
-        const isSelected = selectedTable && selectedTable.id === table.id;
         return (
           <Box
             key={table.id}
             sx={{
               ...tableBox,
               position: "absolute",
-              left: `${table.x + 150}px`,
+              left: `${table.x}px`,
               top: `${table.y}px`,
               cursor: "pointer",
               backgroundColor: "transparent",
             }}
-            onClick={() => onTableSelect(table)}
           >
             {getTableSVG(
               table.type,
               table.status,
               table.price,
-              isSelected ?? false,
               location.pathname
             )}
           </Box>
