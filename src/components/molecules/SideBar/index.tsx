@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Drawer,
   List,
@@ -30,9 +30,40 @@ import {
 } from "./styles";
 
 import { useLocation, Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, AppDispatch } from "../../../redux/store";
+import { fetchAdminProfile } from "../../../redux/action/authAction";
 
 const Sidebar = () => {
+  const dispatch: AppDispatch = useDispatch();
   const location = useLocation();
+
+  useEffect(() => {
+    dispatch(fetchAdminProfile());
+  }, [dispatch]);
+
+  const admin = useSelector((state: RootState) => state.auth.admin);
+  const firstName = admin?.firstName || "User";
+  const lastName = admin?.lastName || "";
+
+  const formatName = (firstName: string, lastName: string) => {
+    const formattedFirstName =
+      firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
+    const formattedLastName =
+      lastName.charAt(0).toUpperCase() + lastName.slice(1).toLowerCase();
+    return `${formattedFirstName} ${formattedLastName}`;
+  };
+
+  const roleOptions = [
+    { value: "admin", label: "Admin" },
+    { value: "staff", label: "Staff Member" },
+    { value: "manager", label: "Manager" },
+  ];
+
+  const getRoleLabel = (roleValue: any) => {
+    const roleOption = roleOptions.find((option) => option.value === roleValue);
+    return roleOption ? roleOption.label : roleValue;
+  };
 
   return (
     <Drawer sx={drawerStyles} variant="permanent" anchor="left">
@@ -74,7 +105,7 @@ const Sidebar = () => {
           <ListItemIcon>
             <HistoryIcon />
           </ListItemIcon>
-          <ListItemText> History</ListItemText>
+          <ListItemText>History</ListItemText>
         </ListItem>
         <ListItem
           button
@@ -85,7 +116,7 @@ const Sidebar = () => {
           <ListItemIcon>
             <TableIcon />
           </ListItemIcon>
-          <ListItemText> Table Setup</ListItemText>
+          <ListItemText>Table Setup</ListItemText>
         </ListItem>
         <ListItem
           button
@@ -96,7 +127,7 @@ const Sidebar = () => {
           <ListItemIcon>
             <PersonAddIcon />
           </ListItemIcon>
-          <ListItemText> Create Admin</ListItemText>
+          <ListItemText>Create Admin</ListItemText>
         </ListItem>
         <ListItem
           button
@@ -107,7 +138,7 @@ const Sidebar = () => {
           <ListItemIcon>
             <PeopleIcon />
           </ListItemIcon>
-          <ListItemText> Admin List</ListItemText>
+          <ListItemText>Admin List</ListItemText>
         </ListItem>
 
         <ListItem
@@ -119,7 +150,7 @@ const Sidebar = () => {
           <ListItemIcon>
             <Logout />
           </ListItemIcon>
-          <ListItemText> Logout</ListItemText>
+          <ListItemText>Logout</ListItemText>
         </ListItem>
       </List>
 
@@ -129,7 +160,12 @@ const Sidebar = () => {
             <PersonIcon sx={profileIcon} />
           </IconButton>
         </Box>
-        <Typography sx={profileText}>Chami Hansani</Typography>
+        <Box sx={{ display: "flex", flexDirection: "column" }}>
+          <Typography sx={{ ...profileText, fontSize: 18 }}>
+            {formatName(firstName, lastName)} {/* Display formatted name */}
+          </Typography>
+          <Typography sx={profileText}>{getRoleLabel(admin?.role)}</Typography>
+        </Box>
       </Box>
     </Drawer>
   );

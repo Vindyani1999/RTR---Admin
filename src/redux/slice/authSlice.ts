@@ -1,9 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { userLogin } from "../action/authAction";
+import { userLogin, fetchAdminProfile } from "../action/authAction";
 
-interface IAuthUser {
-  id: string;
+interface Admin {
+  _id: string;
+  firstName: string;
+  lastName: string;
   email: string;
+  phoneNumber: string;
   role: string;
 }
 
@@ -11,9 +14,9 @@ interface IAuthState {
   isLoading: boolean;
   isAuthenticated: boolean;
   error: string | null;
-  user: IAuthUser | null;
-  resetPasswordEmail: string | null; // Keep as null if needed
-  token: string | null; // Add token to the state
+  user: Admin | null;
+  token: string | null;
+  admin: Admin | null;
 }
 
 const initialState: IAuthState = {
@@ -21,8 +24,8 @@ const initialState: IAuthState = {
   isAuthenticated: false,
   error: null,
   user: null,
-  resetPasswordEmail: null, // Set to null
-  token: null, // Initialize token as null
+  token: null,
+  admin: null,
 };
 
 const authSlice = createSlice({
@@ -30,13 +33,13 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     clearError(state) {
-      state.error = null; // Action to clear error, if needed
+      state.error = null;
     },
     logout(state) {
       state.isAuthenticated = false;
       state.user = null;
-      state.error = null;
-      state.token = null; // Clear token on logout
+      state.token = null;
+      state.admin = null;
     },
   },
   extraReducers: (builder) => {
@@ -48,20 +51,27 @@ const authSlice = createSlice({
       .addCase(userLogin.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isAuthenticated = true;
-        state.user = action.payload.user; // Adjust based on your API response
-        state.token = action.payload.token; // Store token from login response
-        state.error = null;
+        state.user = action.payload.user;
+        state.token = action.payload.token;
       })
       .addCase(userLogin.rejected, (state, action) => {
         state.isLoading = false;
         state.isAuthenticated = false;
-        state.error = action.payload as string; // Ensure this is a string
+        state.error = action.payload as string;
+      })
+      .addCase(fetchAdminProfile.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchAdminProfile.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.admin = action.payload;
+      })
+      .addCase(fetchAdminProfile.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
       });
   },
 });
 
-// Export actions for use in components
 export const { clearError, logout } = authSlice.actions;
-
-// Export the reducer for the store
 export default authSlice.reducer;
