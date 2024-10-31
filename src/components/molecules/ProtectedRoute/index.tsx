@@ -1,16 +1,30 @@
-import React from "react";
-import { Navigate, Outlet } from "react-router-dom";
-import { useAuth } from "../../../context/AuthContext";
+import { useSelector } from "react-redux";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { ROUTES } from "../../../constants/routeConstants";
+
+interface IAuthState {
+  isAuthenticated: boolean;
+  user: IAuthUser | null;
+}
+
+interface IAuthUser {
+  id: number;
+  email: string;
+}
+
+interface RootState {
+  auth: IAuthState;
+}
 
 const ProtectedRoute: React.FC = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const location = useLocation();
 
   if (!isAuthenticated) {
-    // Redirect to login page if not authenticated
-    return <Navigate to="/login" />; // Adjust the path according to your ROUTES constant
+    return <Navigate to={ROUTES.LOGIN} state={{ from: location }} replace />;
   }
 
-  return <Outlet />; // Render the child routes if authenticated
+  return <Outlet />;
 };
 
 export default ProtectedRoute;

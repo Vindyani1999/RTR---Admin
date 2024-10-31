@@ -1,24 +1,40 @@
 import React from "react";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import Logo from "../../../assets/icons/Logo/logo.png";
-import SignUpComponent from "../../atoms/SignUpComponent";
-import { useAuth } from "../../../context/AuthContext";
+import LoginForm from "../../organisms/LoginForm";
+import { AppDispatch, RootState } from "../../../redux/store";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../../../constants/routeConstants";
+import { userLogin } from "../../../redux/action/authAction";
+
+import { useDispatch, useSelector } from "react-redux";
 
 const LoginPage: React.FC = () => {
-  const { login } = useAuth();
+  const dispatch: AppDispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { isAuthenticated, error } = useSelector(
+    (state: RootState) => state.auth
+  );
+
   const handleLogin = (email: string, password: string) => {
+    dispatch(userLogin({ email, password }));
     console.log("Logging in with:", email, password);
-    login();
   };
 
+  if (isAuthenticated) {
+    navigate(ROUTES.HOME);
+  }
+
   return (
-    <Box>
-      <SignUpComponent
-        img={Logo}
-        buttonText="Login"
-        onclick={handleLogin}
-        showFields={true} // Show text fields for login
-      />
+    <Box sx={{ textAlign: "center", pt: 4 }}>
+      <img src={Logo} alt="logo" style={{ width: 200, marginBottom: 16 }} />
+      <LoginForm onLogin={handleLogin} />
+      {error && (
+        <Typography color="error" sx={{ mt: 2 }}>
+          {error}
+        </Typography>
+      )}
     </Box>
   );
 };
