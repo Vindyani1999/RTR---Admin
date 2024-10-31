@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Drawer,
   List,
@@ -30,9 +30,24 @@ import {
 } from "./styles";
 
 import { useLocation, Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, AppDispatch } from "../../../redux/store";
+
+import { fetchAdminProfile } from "../../../redux/action/authAction";
 
 const Sidebar = () => {
+  const dispatch: AppDispatch = useDispatch();
   const location = useLocation();
+
+  useEffect(() => {
+    dispatch(fetchAdminProfile());
+  }, [dispatch]);
+
+  const admin = useSelector((state: RootState) => state.auth.admin);
+  const firstName = admin?.firstName || "User"; // Fallback to "User"
+  const lastName = admin?.lastName || "";
+
+  console.log("Admin firstName:", firstName, "lastName:", lastName); // Debug: Verify names
 
   return (
     <Drawer sx={drawerStyles} variant="permanent" anchor="left">
@@ -129,7 +144,7 @@ const Sidebar = () => {
             <PersonIcon sx={profileIcon} />
           </IconButton>
         </Box>
-        <Typography sx={profileText}>Chami Hansani</Typography>
+        <Typography sx={profileText}>{`${firstName} ${lastName}`}</Typography>
       </Box>
     </Drawer>
   );
