@@ -40,3 +40,31 @@ export const getProfile = async () => {
     return Promise.reject("An unknown error occurred");
   }
 };
+
+export const logOut = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("No token found");
+
+    await axiosClient.post(
+      "/auth/logout",
+      {},
+      {
+        // Make a POST request to the logout endpoint
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+
+    // Clear the token from local storage
+    localStorage.removeItem("token");
+    console.log("User logged out and token cleared."); // Debug: Confirm logout
+  } catch (error) {
+    console.error("Logout error:", error); // Debug: Error details
+    if (error instanceof AxiosError && error.response?.data) {
+      return Promise.reject(error.response.data.message);
+    } else if (error instanceof Error) {
+      return Promise.reject(error.message);
+    }
+    return Promise.reject("An unknown error occurred");
+  }
+};
