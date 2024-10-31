@@ -40,7 +40,7 @@ export const profileIcon = {
   borderRadius: "50%",
 };
 
-export const profileText = { ml: 1, color: "wheat", fontSize: 16 };
+export const profileText = { ml: 1, color: "wheat", fontSize: 12 };
 
 export const listItemStyles = {
   fontFamily: "Raleway, sans-serif", // Setting font family
