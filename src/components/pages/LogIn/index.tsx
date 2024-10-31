@@ -1,11 +1,12 @@
 import React from "react";
-import { Box, Snackbar } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import Logo from "../../../assets/icons/Logo/logo.png";
-import SignUpComponent from "../../atoms/SignUpComponent";
+import LoginForm from "../../organisms/LoginForm";
 import { AppDispatch, RootState } from "../../../redux/store";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../../constants/routeConstants";
-import { userLogin } from "../../../redux/action/authAction"; // Import your login action
+import { userLogin } from "../../../redux/action/authAction";
+
 import { useDispatch, useSelector } from "react-redux";
 
 const LoginPage: React.FC = () => {
@@ -16,46 +17,24 @@ const LoginPage: React.FC = () => {
     (state: RootState) => state.auth
   );
 
-  // Handle login by dispatching the userLogin action
   const handleLogin = (email: string, password: string) => {
+    dispatch(userLogin({ email, password }));
     console.log("Logging in with:", email, password);
-
-    dispatch(userLogin({ email, password })); // Dispatch the login action with credentials
   };
 
-  React.useEffect(() => {
-    if (isAuthenticated) {
-      navigate(ROUTES.HOME);
-    }
-  }, [isAuthenticated, navigate]);
-
-  // Optional: For displaying error messages
-  const [openSnackbar, setOpenSnackbar] = React.useState(false);
-
-  React.useEffect(() => {
-    if (error) {
-      setOpenSnackbar(true); // Show snackbar if there is an error
-    }
-  }, [error]);
-
-  const handleCloseSnackbar = () => {
-    setOpenSnackbar(false);
-  };
+  if (isAuthenticated) {
+    navigate(ROUTES.HOME);
+  }
 
   return (
-    <Box>
-      <SignUpComponent
-        img={Logo}
-        buttonText="Login"
-        onclick={handleLogin} // Pass the handleLogin function
-        showFields={true} // Show text fields for login
-      />
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
-        message={error} // Display the error message from Redux state
-      />
+    <Box sx={{ textAlign: "center", pt: 4 }}>
+      <img src={Logo} alt="logo" style={{ width: 200, marginBottom: 16 }} />
+      <LoginForm onLogin={handleLogin} />
+      {error && (
+        <Typography color="error" sx={{ mt: 2 }}>
+          {error}
+        </Typography>
+      )}
     </Box>
   );
 };

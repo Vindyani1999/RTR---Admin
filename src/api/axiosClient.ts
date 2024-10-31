@@ -1,10 +1,15 @@
-import axios, { AxiosInstance } from "axios";
+import axios from "axios";
 
-const axiosClient: AxiosInstance = axios.create({
-  baseURL: "http://localhost:5000/api",
-  headers: {
-    "Content-Type": "application/json",
-  },
+const axiosClient = axios.create({
+  baseURL: "http://localhost:5001/api",
+});
+
+axiosClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem("authToken");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
 });
 
 export default axiosClient;
