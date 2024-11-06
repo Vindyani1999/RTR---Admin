@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import BookingsIcon from "@mui/icons-material/EventAvailable";
 import MenuIcon from "@mui/icons-material/RestaurantMenu";
-import TableIcon from "@mui/icons-material/TableChart";
+//import TableIcon from "@mui/icons-material/TableChart";
 import HistoryIcon from "@mui/icons-material/History";
 import PersonIcon from "@mui/icons-material/Person";
 import Logout from "@mui/icons-material/Logout";
@@ -107,7 +107,7 @@ const Sidebar = () => {
           </ListItemIcon>
           <ListItemText>History</ListItemText>
         </ListItem>
-        <ListItem
+        {/* <ListItem
           button
           component={Link}
           to={ROUTES.TABLES}
@@ -117,7 +117,7 @@ const Sidebar = () => {
             <TableIcon />
           </ListItemIcon>
           <ListItemText>Table Setup</ListItemText>
-        </ListItem>
+        </ListItem> */}
         <ListItem
           button
           component={Link}
