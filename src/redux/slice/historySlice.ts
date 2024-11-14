@@ -1,38 +1,38 @@
 // src/redux/slices/bookingSlice.ts
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { fetchBookings } from "../action/bookingAction";
+import { fetchPastBookings } from "../action/historyAction";
 
 interface BookingState {
-  bookings: any[];
+  pastBookings: any[];
   loading: boolean;
   error: string | null;
 }
 
 const initialState: BookingState = {
-  bookings: [],
+  pastBookings: [],
   loading: false,
   error: null,
 };
 
 const bookingSlice = createSlice({
-  name: "bookings",
+  name: "history",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchBookings.pending, (state) => {
+      .addCase(fetchPastBookings.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(
-        fetchBookings.fulfilled,
+        fetchPastBookings.fulfilled,
         (state, action: PayloadAction<any[]>) => {
           state.loading = false;
-          state.bookings = action.payload;
+          state.pastBookings = action.payload;
         }
       )
-      .addCase(fetchBookings.rejected, (state, action) => {
+      .addCase(fetchPastBookings.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message ?? "An error occurred";
       });

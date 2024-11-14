@@ -1,21 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
+  Box,
+  Button,
   Checkbox,
+  FormControlLabel,
+  Popover,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
-  FormControlLabel,
-  Box,
-  Button,
-  Popover,
 } from "@mui/material";
-import { tableData } from "./mockData";
+import { fetchPastBookings } from "../../../redux/action/historyAction"; // Import correct action
+import { RootState, AppDispatch } from "../../../redux/store";
 import SearchBar from "../../atoms/SearchBar";
 
 const BookingsTable = () => {
-  // State to manage which columns are visible
+  const dispatch: AppDispatch = useDispatch();
+  const { pastBookings, loading, error } = useSelector(
+    (state: RootState) => state.history // Ensure slice name matches bookingSlice
+  );
+
+  const [searchTerm, setSearchTerm] = useState("");
   const [visibleColumns, setVisibleColumns] = useState({
     tableNumber: false,
     tableType: false,
@@ -29,7 +36,17 @@ const BookingsTable = () => {
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  const [searchTerm, setSearchTerm] = useState("");
+  useEffect(() => {
+    dispatch(fetchPastBookings()); // Dispatch action to fetch bookings
+  }, [dispatch]);
+
+  const filteredData = Array.isArray(pastBookings)
+    ? pastBookings.filter((row) =>
+        Object.values(row).some((value) =>
+          String(value).toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      )
+    : [];
 
   const handleColumnToggle = (column: keyof typeof visibleColumns) => {
     setVisibleColumns((prevState) => ({
@@ -49,12 +66,6 @@ const BookingsTable = () => {
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
 
-  const filteredData = tableData.filter((row) =>
-    Object.values(row).some((value) =>
-      String(value).toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  );
-
   return (
     <div>
       <Box
@@ -66,18 +77,12 @@ const BookingsTable = () => {
           padding: "10px 0",
         }}
       >
-        <h2>Booking History</h2>
-
+        <h2>Past Bookings</h2>
         <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            textAlign: "end",
-          }}
+          sx={{ display: "flex", justifyContent: "center", textAlign: "end" }}
         >
           <SearchBar value={searchTerm} onChange={setSearchTerm} />
         </Box>
-
         <Box sx={{ textAlign: "end", mr: 5 }}>
           <Button
             variant="contained"
@@ -90,114 +95,39 @@ const BookingsTable = () => {
         </Box>
       </Box>
 
-      {/* Popover for column checkboxes */}
       <Popover
         id={id}
         open={open}
         anchorEl={anchorEl}
         onClose={handleClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
-        sx={{
-          maxWidth: "xs",
-          display: "flex",
-          flexDirection: "column",
-        }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        transformOrigin={{ vertical: "top", horizontal: "left" }}
+        sx={{ maxWidth: "xs", display: "flex", flexDirection: "column" }}
       >
         <Box
           p={2}
           sx={{ fontSize: 12, display: "flex", flexDirection: "column" }}
         >
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={visibleColumns.tableNumber}
-                onChange={() => handleColumnToggle("tableNumber")}
-              />
-            }
-            label="Table No"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={visibleColumns.tableType}
-                onChange={() => handleColumnToggle("tableType")}
-              />
-            }
-            label="Table Type"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={visibleColumns.numPeople}
-                onChange={() => handleColumnToggle("numPeople")}
-              />
-            }
-            label="No of People"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={visibleColumns.numChairs}
-                onChange={() => handleColumnToggle("numChairs")}
-              />
-            }
-            label="No of Chairs"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={visibleColumns.tablePrice}
-                onChange={() => handleColumnToggle("tablePrice")}
-              />
-            }
-            label="Table Price"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={visibleColumns.menuItems}
-                onChange={() => handleColumnToggle("menuItems")}
-              />
-            }
-            label="Menu Items"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={visibleColumns.totalMenuPrice}
-                onChange={() => handleColumnToggle("totalMenuPrice")}
-              />
-            }
-            label="Menu Price"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={visibleColumns.finalAmount}
-                onChange={() => handleColumnToggle("finalAmount")}
-              />
-            }
-            label="Final Amount"
-          />
+          {Object.keys(visibleColumns).map((column) => (
+            <FormControlLabel
+              key={column}
+              control={
+                <Checkbox
+                  checked={
+                    visibleColumns[column as keyof typeof visibleColumns]
+                  }
+                  onChange={() =>
+                    handleColumnToggle(column as keyof typeof visibleColumns)
+                  }
+                />
+              }
+              label={column.replace(/([A-Z])/g, " $1").toUpperCase()}
+            />
+          ))}
         </Box>
       </Popover>
 
-      {/* Scrollable Table */}
-      <Box
-        sx={{
-          flex: 1,
-
-          maxHeight: "580px",
-          overflowY: "auto",
-        }}
-      >
+      <Box sx={{ flex: 1, maxHeight: "580px", overflowY: "auto" }}>
         <Table sx={{ borderCollapse: "collapse", tableLayout: "fixed" }}>
           <TableHead>
             <TableRow>
@@ -245,7 +175,6 @@ const BookingsTable = () => {
               >
                 Person Name
               </TableCell>
-
               {visibleColumns.tableNumber && (
                 <TableCell
                   sx={{
@@ -353,65 +282,89 @@ const BookingsTable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredData.map((row, index) => (
-              <TableRow key={index}>
-                <TableCell sx={{ border: "1px solid black" }}>
-                  {index + 1}
+            {loading ? (
+              <TableRow>
+                <TableCell colSpan={100} sx={{ textAlign: "center" }}>
+                  Loading...
                 </TableCell>
-                <TableCell sx={{ border: "1px solid black" }}>
-                  {row.date}
-                </TableCell>
-                <TableCell sx={{ border: "1px solid black" }}>
-                  {row.timeSlot}
-                </TableCell>
-                <TableCell sx={{ border: "1px solid black" }}>
-                  {row.name}
-                </TableCell>
-
-                {visibleColumns.tableNumber && (
-                  <TableCell sx={{ border: "1px solid black" }}>
-                    {row.tableNumber}
-                  </TableCell>
-                )}
-                {visibleColumns.tableType && (
-                  <TableCell sx={{ border: "1px solid black" }}>
-                    {row.tableType}
-                  </TableCell>
-                )}
-                {visibleColumns.numPeople && (
-                  <TableCell sx={{ border: "1px solid black" }}>
-                    {row.numPeople}
-                  </TableCell>
-                )}
-                {visibleColumns.numChairs && (
-                  <TableCell sx={{ border: "1px solid black" }}>
-                    {row.numChairs}
-                  </TableCell>
-                )}
-                {visibleColumns.tablePrice && (
-                  <TableCell sx={{ border: "1px solid black" }}>
-                    {row.tablePrice}
-                  </TableCell>
-                )}
-                {visibleColumns.menuItems && (
-                  <TableCell sx={{ border: "1px solid black" }}>
-                    {Array.isArray(row.menuItems)
-                      ? row.menuItems.join(", ")
-                      : row.menuItems}
-                  </TableCell>
-                )}
-                {visibleColumns.totalMenuPrice && (
-                  <TableCell sx={{ border: "1px solid black" }}>
-                    {row.totalMenuPrice}
-                  </TableCell>
-                )}
-                {visibleColumns.finalAmount && (
-                  <TableCell sx={{ border: "1px solid black" }}>
-                    {row.finalAmount}
-                  </TableCell>
-                )}
               </TableRow>
-            ))}
+            ) : error ? (
+              <TableRow>
+                <TableCell colSpan={100} sx={{ textAlign: "center" }}>
+                  Error: {error}
+                </TableCell>
+              </TableRow>
+            ) : (
+              filteredData.map((row, index) => (
+                <TableRow key={index}>
+                  <TableCell sx={{ border: "1px solid black" }}>
+                    {index + 1}
+                  </TableCell>
+                  <TableCell sx={{ border: "1px solid black" }}>
+                    {row.selectedDate}
+                  </TableCell>
+                  <TableCell sx={{ border: "1px solid black" }}>
+                    {row.startTime} - {row.endTime}
+                  </TableCell>
+                  <TableCell sx={{ border: "1px solid black" }}>
+                    {row.firstName} {row.lastName}
+                  </TableCell>
+                  {visibleColumns.tableNumber && (
+                    <TableCell sx={{ border: "1px solid black" }}>
+                      {row.tableNumber}
+                    </TableCell>
+                  )}
+                  {visibleColumns.tableType && (
+                    <TableCell sx={{ border: "1px solid black" }}>
+                      {row.tableType}
+                    </TableCell>
+                  )}
+                  {visibleColumns.numPeople && (
+                    <TableCell sx={{ border: "1px solid black" }}>
+                      {row.numberOfPeople}
+                    </TableCell>
+                  )}
+                  {visibleColumns.numChairs && (
+                    <TableCell sx={{ border: "1px solid black" }}>
+                      {row.numberOfChairs}
+                    </TableCell>
+                  )}
+                  {visibleColumns.tablePrice && (
+                    <TableCell sx={{ border: "1px solid black" }}>
+                      {row.tablePrice}
+                    </TableCell>
+                  )}
+                  {visibleColumns.menuItems && (
+                    <TableCell sx={{ border: "1px solid black" }}>
+                      {row.cartItems.map((item: any) => item.name).join(", ")}
+                    </TableCell>
+                  )}
+                  {visibleColumns.totalMenuPrice && (
+                    <TableCell sx={{ border: "1px solid black" }}>
+                      {row.cartItems
+                        ? row.cartItems.reduce(
+                            (total: any, item: any) =>
+                              total + item.quantity * item.price,
+                            0
+                          )
+                        : "N/A"}
+                    </TableCell>
+                  )}
+
+                  {visibleColumns.finalAmount && (
+                    <TableCell sx={{ border: "1px solid black" }}>
+                      {(row.cartItems
+                        ? row.cartItems.reduce(
+                            (total: any, item: any) =>
+                              total + item.quantity * item.price,
+                            0
+                          )
+                        : 0) + (row.tablePrice || 0)}
+                    </TableCell>
+                  )}
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </Box>

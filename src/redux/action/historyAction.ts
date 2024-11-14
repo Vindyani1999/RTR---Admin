@@ -1,13 +1,13 @@
 // src/redux/action/bookingAction.ts
 
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { getAllBookings } from "../../services/bookingService";
+import { getAllPastBookings } from "../../services/bookingService";
 
-export const fetchBookings = createAsyncThunk(
-  "bookings/fetchBookings",
+export const fetchPastBookings = createAsyncThunk(
+  "history/fetchPastBookings",
   async (_, { rejectWithValue }) => {
     try {
-      const bookings = await getAllBookings();
+      const bookings = await getAllPastBookings();
       return bookings;
     } catch (error: any) {
       console.error("Error in fetchBookings action:", error);
