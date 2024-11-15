@@ -11,12 +11,12 @@ export const logIn = async (userCredentials: Record<string, string>) => {
     return { user: data.user, token: data.token };
   } catch (error: unknown) {
     console.error("Login error:", error); // Debug: Error details
-    if (error instanceof AxiosError && error.response?.data) {
-      return Promise.reject(error.response.data.message);
+    if (error instanceof AxiosError && error.response?.data?.message) {
+      return Promise.reject(new Error(error.response.data.message));
     } else if (error instanceof Error) {
-      return Promise.reject(error.message);
+      return Promise.reject(new Error(error.message));
     }
-    return Promise.reject("An unknown error occurred");
+    return Promise.reject(new Error("An unknown error occurred"));
   }
 };
 
@@ -32,12 +32,12 @@ export const getProfile = async () => {
     return data.admin;
   } catch (error) {
     console.error("Profile fetch error:", error); // Debug: Error details
-    if (error instanceof AxiosError && error.response?.data) {
-      return Promise.reject(error.response.data.message);
+    if (error instanceof AxiosError && error.response?.data?.message) {
+      return Promise.reject(new Error(error.response.data.message));
     } else if (error instanceof Error) {
-      return Promise.reject(error.message);
+      return Promise.reject(new Error(error.message));
     }
-    return Promise.reject("An unknown error occurred");
+    return Promise.reject(new Error("An unknown error occurred"));
   }
 };
 
@@ -60,11 +60,11 @@ export const logOut = async () => {
     console.log("User logged out and token cleared."); // Debug: Confirm logout
   } catch (error) {
     console.error("Logout error:", error); // Debug: Error details
-    if (error instanceof AxiosError && error.response?.data) {
-      return Promise.reject(error.response.data.message);
+    if (error instanceof AxiosError && error.response?.data?.message) {
+      return Promise.reject(new Error(error.response.data.message));
     } else if (error instanceof Error) {
-      return Promise.reject(error.message);
+      return Promise.reject(new Error(error.message));
     }
-    return Promise.reject("An unknown error occurred");
+    return Promise.reject(new Error("An unknown error occurred"));
   }
 };

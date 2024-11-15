@@ -10,10 +10,26 @@ export const createAdmin = async (newAdmin: NewAdmin) => {
   } catch (error) {
     console.error("Create admin error:", error); // Debug: Error details
     if (error instanceof AxiosError && error.response?.data?.message) {
-      return Promise.reject(error.response.data.message);
+      return Promise.reject(new Error(error.response.data.message));
     } else if (error instanceof Error) {
-      return Promise.reject(error.message);
+      return Promise.reject(new Error(error.message));
     }
-    return Promise.reject("An unknown error occurred");
+    return Promise.reject(new Error("An unknown error occurred"));
+  }
+};
+
+export const getAllPastAdmins = async () => {
+  try {
+    const { data } = await axiosClient.get("/auth/admins");
+    console.log("Fetched admins:", data.users);
+    return data.users;
+  } catch (error) {
+    console.error("Error fetching admins:", error);
+    if (error instanceof AxiosError && error.response?.data?.users) {
+      return Promise.reject(new Error(error.response.data.data.message));
+    } else if (error instanceof Error) {
+      return Promise.reject(new Error(error.message));
+    }
+    return Promise.reject(new Error("An unknown error occurred"));
   }
 };
