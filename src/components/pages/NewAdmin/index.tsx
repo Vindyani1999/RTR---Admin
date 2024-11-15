@@ -25,16 +25,6 @@ const NewAdmin: React.FC = () => {
     (state: RootState) => state.admin
   );
 
-  React.useEffect(() => {
-    if (success) {
-      toast.success("New admin created successfully!");
-      dispatch(resetAdminState());
-      formik.resetForm();
-    } else if (error) {
-      toast.error(`Error: ${error}`);
-    }
-  }, [success, error, dispatch]);
-
   const validationSchema = Yup.object({
     firstName: Yup.string().required("First name is required"),
     lastName: Yup.string().required("Last name is required"),
@@ -48,7 +38,7 @@ const NewAdmin: React.FC = () => {
       .oneOf([Yup.ref("password"), ""], "Passwords must match")
       .required("Confirm password is required"),
     phoneNumber: Yup.string()
-      .matches(/^[0-9]+$/, "Phone number must be only digits")
+      .matches(/^\d+$/, "Phone number must be only digits")
       .min(10, "Phone number should be at least 10 digits")
       .required("Phone number is required"),
     role: Yup.string().required("Role is required"),
@@ -72,6 +62,16 @@ const NewAdmin: React.FC = () => {
       console.log("Form data:", dataToSubmit);
     },
   });
+
+  React.useEffect(() => {
+    if (success) {
+      toast.success("New admin created successfully!");
+      dispatch(resetAdminState());
+      formik.resetForm();
+    } else if (error) {
+      toast.error(`Error: ${error}`);
+    }
+  }, [success, error, dispatch, formik]);
 
   return (
     <>
