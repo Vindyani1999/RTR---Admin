@@ -7,15 +7,34 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-} from "@mui/material"; // Import necessary components
+  Typography,
+} from "@mui/material";
 import CustomButton from "../../atoms/CustomButton";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { ToastContainer, toast } from "react-toastify"; // Importing ToastContainer and toast
-import "react-toastify/dist/ReactToastify.css"; // Importing the CSS for toast notifications
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store";
+import { createAdminAction } from "../../../redux/action/adminAction";
+import { resetAdminState } from "../../../redux/slice/adminSlice";
 
 const NewAdmin: React.FC = () => {
-  // Define Yup validation schema
+  const dispatch = useDispatch<AppDispatch>();
+  const { isLoading, error, success } = useSelector(
+    (state: RootState) => state.admin
+  );
+
+  React.useEffect(() => {
+    if (success) {
+      toast.success("New admin created successfully!");
+      dispatch(resetAdminState());
+      formik.resetForm();
+    } else if (error) {
+      toast.error(`Error: ${error}`);
+    }
+  }, [success, error, dispatch]);
+
   const validationSchema = Yup.object({
     firstName: Yup.string().required("First name is required"),
     lastName: Yup.string().required("Last name is required"),
@@ -32,10 +51,9 @@ const NewAdmin: React.FC = () => {
       .matches(/^[0-9]+$/, "Phone number must be only digits")
       .min(10, "Phone number should be at least 10 digits")
       .required("Phone number is required"),
-    role: Yup.string().required("Role is required"), // Add validation for role
+    role: Yup.string().required("Role is required"),
   });
 
-  // Initialize Formik
   const formik = useFormik({
     initialValues: {
       firstName: "",
@@ -44,23 +62,22 @@ const NewAdmin: React.FC = () => {
       password: "",
       confirmPassword: "",
       phoneNumber: "",
-      role: "", // Initialize role
+      role: "",
     },
     validationSchema,
     onSubmit: (values) => {
-      console.log("New admin details:", values);
-      // Handle form submission logic here
-
-      // Simulating an API call and showing a success toast
-      setTimeout(() => {
-        toast.success("New admin created successfully!"); // Show success toast
-      }, 500);
+      // Remove confirmPassword before submitting the data
+      const { confirmPassword, ...dataToSubmit } = values;
+      dispatch(createAdminAction(dataToSubmit));
+      console.log("Form data:", dataToSubmit);
     },
   });
 
   return (
     <>
-      <h2>Create New Admin</h2>
+      <Typography sx={{ fontSize: 24, fontWeight: 700, ml: 3, mt: 1.5 }}>
+        Create New Admin
+      </Typography>
       <Box
         display="flex"
         flexDirection="column"
@@ -115,9 +132,9 @@ const NewAdmin: React.FC = () => {
               {...formik.getFieldProps("role")}
               error={formik.touched.role && Boolean(formik.errors.role)}
             >
-              <MenuItem value="Owner">Owner</MenuItem>
-              <MenuItem value="Staff">Staff</MenuItem>
-              <MenuItem value="Manager">Manager</MenuItem>
+              <MenuItem value="admin">Admin</MenuItem>
+              <MenuItem value="staff">Staff</MenuItem>
+              <MenuItem value="manager">Manager</MenuItem>
             </Select>
             {formik.touched.role && formik.errors.role && (
               <div
@@ -170,10 +187,14 @@ const NewAdmin: React.FC = () => {
             sx={{ mt: 2, mb: 2 }}
           />
 
-          <CustomButton label="Create Admin" type="submit" />
+          <CustomButton
+            label={isLoading ? "Creating..." : "Create Admin"}
+            type="submit"
+            disabled={isLoading}
+          />
         </form>
       </Box>
-      <ToastContainer />{" "}
+      <ToastContainer />
     </>
   );
 };

@@ -1,10 +1,11 @@
 export const logoStyles = {
-  mt: 3,
-  height: 70,
+  mt: 4,
+  height: 90,
   width: "auto",
   cursor: "pointer",
   opacity: 1,
   backgrundColor: "white",
+  mb: 2,
 };
 
 export const drawerStyles = {
@@ -45,11 +46,11 @@ export const profileText = { ml: 1, color: "wheat", fontSize: 12 };
 export const listItemStyles = {
   fontFamily: "Raleway, sans-serif", // Setting font family
   fontSize: "18px", // Setting font size
-  "&:hover": {
-    backgroundColor: "rgba(0, 0, 0, 0.1)", // Lighter hover background color
+  "&:hover, &.Mui-selected ": {
+    backgroundColor: "rgba(0, 0, 0, 0.2)",
+    color: "rgba(225, 225, 225, 0.9)",
   },
-  "&.Mui-selected": {
-    backgroundColor: "rgba(0, 0, 0, 0.2)", // Darker background color when selected
-    color: "#fff", // Lighter text color when selected
+  "& .MuiListItemIcon-root": {
+    color: "inherit", // Default icon color
   },
 };

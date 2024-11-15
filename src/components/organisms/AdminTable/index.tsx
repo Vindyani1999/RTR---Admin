@@ -7,6 +7,7 @@ import {
   TableRow,
   Box,
   Button,
+  Typography,
 } from "@mui/material";
 import SearchBar from "../../atoms/SearchBar";
 import { adminData } from "./mockData"; // Adjust the import path as necessary
@@ -43,7 +44,9 @@ const AdminsTable = () => {
           padding: "10px 0",
         }}
       >
-        <h2>Admin List</h2>
+        <Typography sx={{ fontSize: 24, fontWeight: 700, ml: 3 }}>
+          Admin List
+        </Typography>
 
         <Box
           sx={{

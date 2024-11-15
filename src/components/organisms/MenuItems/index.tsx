@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import MenuCard from "../../atoms/MenuCard";
 import { menuItems } from "./mockData";
 import SearchBar from "../../atoms/SearchBar";
@@ -23,7 +23,9 @@ const MenuItems: React.FC = () => {
           flexDirection: "column",
         }}
       >
-        <h2>Menu Items</h2>
+        <Typography sx={{ fontSize: 24, fontWeight: 700, ml: 3, mt: 1.5 }}>
+          Menu Items
+        </Typography>
         <Box
           sx={{
             display: "flex",

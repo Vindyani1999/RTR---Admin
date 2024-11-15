@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import Logo from "../../../assets/icons/Logo/logo.png";
 import LoginForm from "../../organisms/LoginForm";
 import { AppDispatch, RootState } from "../../../redux/store";
@@ -13,9 +13,7 @@ const LoginPage: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { isAuthenticated, error } = useSelector(
-    (state: RootState) => state.auth
-  );
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
 
   const handleLogin = (email: string, password: string) => {
     dispatch(userLogin({ email, password }));
@@ -30,11 +28,11 @@ const LoginPage: React.FC = () => {
     <Box sx={{ textAlign: "center", pt: 4 }}>
       <img src={Logo} alt="logo" style={{ width: 200, marginBottom: 16 }} />
       <LoginForm onLogin={handleLogin} />
-      {error && (
+      {/* {error && (
         <Typography color="error" sx={{ mt: 2 }}>
           {error}
         </Typography>
-      )}
+      )} */}
     </Box>
   );
 };

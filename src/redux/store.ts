@@ -6,6 +6,7 @@ import storage from "redux-persist/lib/storage";
 import authSlice from "./slice/authSlice";
 import bookingSlice from "./slice/bookingSlice";
 import historySlice from "./slice/historySlice";
+import adminSlice from "./slice/adminSlice";
 import { useDispatch } from "react-redux";
 
 const persistConfig = {
@@ -20,6 +21,7 @@ const store = configureStore({
     auth: persistedAuthReducer,
     bookings: bookingSlice,
     history: historySlice,
+    admin: adminSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

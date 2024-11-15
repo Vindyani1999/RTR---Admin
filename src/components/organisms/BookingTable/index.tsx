@@ -11,6 +11,7 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  Typography,
 } from "@mui/material";
 import { fetchBookings } from "../../../redux/action/bookingAction"; // Import correct action
 import { RootState, AppDispatch } from "../../../redux/store";
@@ -77,7 +78,9 @@ const BookingsTable = () => {
           padding: "10px 0",
         }}
       >
-        <h2>Current Bookings</h2>
+        <Typography sx={{ fontSize: 24, fontWeight: 700, ml: 3 }}>
+          Current Bookings
+        </Typography>
         <Box
           sx={{ display: "flex", justifyContent: "center", textAlign: "end" }}
         >
@@ -138,6 +141,7 @@ const BookingsTable = () => {
                   top: 0,
                   backgroundColor: "#8b8a8a",
                   zIndex: 1,
+                  width: "30px",
                 }}
               >
                 No
@@ -175,19 +179,31 @@ const BookingsTable = () => {
               >
                 Person Name
               </TableCell>
-              {visibleColumns.tableNumber && (
-                <TableCell
-                  sx={{
-                    border: "1px solid black",
-                    position: "sticky",
-                    top: 0,
-                    backgroundColor: "#8b8a8a",
-                    zIndex: 1,
-                  }}
-                >
-                  Table Number
-                </TableCell>
-              )}
+
+              <TableCell
+                sx={{
+                  border: "1px solid black",
+                  position: "sticky",
+                  top: 0,
+                  backgroundColor: "#8b8a8a",
+                  zIndex: 1,
+                }}
+              >
+                Table Number
+              </TableCell>
+
+              <TableCell
+                sx={{
+                  border: "1px solid black",
+                  position: "sticky",
+                  top: 0,
+                  backgroundColor: "#8b8a8a",
+                  zIndex: 1,
+                }}
+              >
+                Final Amount
+              </TableCell>
+
               {visibleColumns.tableType && (
                 <TableCell
                   sx={{
@@ -266,19 +282,6 @@ const BookingsTable = () => {
                   Total Menu Price
                 </TableCell>
               )}
-              {visibleColumns.finalAmount && (
-                <TableCell
-                  sx={{
-                    border: "1px solid black",
-                    position: "sticky",
-                    top: 0,
-                    backgroundColor: "#8b8a8a",
-                    zIndex: 1,
-                  }}
-                >
-                  Final Amount
-                </TableCell>
-              )}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -309,11 +312,21 @@ const BookingsTable = () => {
                   <TableCell sx={{ border: "1px solid black" }}>
                     {row.firstName} {row.lastName}
                   </TableCell>
-                  {visibleColumns.tableNumber && (
-                    <TableCell sx={{ border: "1px solid black" }}>
-                      {row.tableNumber}
-                    </TableCell>
-                  )}
+
+                  <TableCell sx={{ border: "1px solid black" }}>
+                    {row.tableNumber}
+                  </TableCell>
+
+                  <TableCell sx={{ border: "1px solid black" }}>
+                    {(row.cartItems
+                      ? row.cartItems.reduce(
+                          (total: any, item: any) =>
+                            total + item.quantity * item.price,
+                          0
+                        )
+                      : 0) + (row.tablePrice || 0)}
+                  </TableCell>
+
                   {visibleColumns.tableType && (
                     <TableCell sx={{ border: "1px solid black" }}>
                       {row.tableType}
@@ -348,18 +361,6 @@ const BookingsTable = () => {
                             0
                           )
                         : "N/A"}
-                    </TableCell>
-                  )}
-
-                  {visibleColumns.finalAmount && (
-                    <TableCell sx={{ border: "1px solid black" }}>
-                      {(row.cartItems
-                        ? row.cartItems.reduce(
-                            (total: any, item: any) =>
-                              total + item.quantity * item.price,
-                            0
-                          )
-                        : 0) + (row.tablePrice || 0)}
                     </TableCell>
                   )}
                 </TableRow>
