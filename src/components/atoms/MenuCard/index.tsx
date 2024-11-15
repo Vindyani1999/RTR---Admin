@@ -1,14 +1,23 @@
 import React, { useState } from "react";
-import { Box, Card, CardContent, Typography, Divider } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  Divider,
+  IconButton,
+} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 import CustomButton from "../CustomButton";
 import EditMenuDialog from "../EditMenuPopup";
 
-interface MenuCardProps {
+export interface MenuCardProps {
   name: string;
   description: string;
   price: number;
   image: string;
   category: string[];
+  handleDelete?: () => void;
 }
 
 const MenuCard: React.FC<MenuCardProps> = ({
@@ -17,6 +26,7 @@ const MenuCard: React.FC<MenuCardProps> = ({
   price,
   image,
   category,
+  handleDelete,
 }) => {
   const [open, setOpen] = useState(false);
   const [item, setItem] = useState<MenuCardProps>({
@@ -25,6 +35,7 @@ const MenuCard: React.FC<MenuCardProps> = ({
     price,
     image,
     category,
+    handleDelete,
   });
 
   const handleSave = (updatedItem: Omit<MenuCardProps, "id">) => {
@@ -87,11 +98,28 @@ const MenuCard: React.FC<MenuCardProps> = ({
                 </span>
               ))}
             </Typography>
-            <Box sx={{ textAlign: "end", mt: 1 }}>
+            <Box
+              sx={{ display: "flex", justifyContent: "space-between", mt: 1 }}
+            >
               <CustomButton
                 label="Edit Details"
                 onClick={() => setOpen(true)}
               />
+              <IconButton
+                aria-label="delete"
+                onClick={handleDelete}
+                sx={{
+                  color: "#716b6b",
+                  padding: 1,
+                  backgroundColor: "#d5d1d1",
+                  "&:hover": {
+                    color: "darkred",
+                    backgroundColor: "#d5d1d1",
+                  },
+                }}
+              >
+                <DeleteIcon />
+              </IconButton>
             </Box>
           </CardContent>
         </Box>
