@@ -1,12 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createAdminAction } from "../action/adminAction";
+import { createAdminAction, fetchAdminsAction } from "../action/adminAction";
 import { NewAdmin } from "../../constants/types/newAdminType";
+import { Admins } from "../../constants/types/adminTableType";
 
 interface IAuthState {
   isLoading: boolean;
   error: string | null;
   success: boolean;
   admin: NewAdmin | null;
+  admins: Admins | [];
 }
 
 const initialState: IAuthState = {
@@ -14,6 +16,7 @@ const initialState: IAuthState = {
   error: null,
   success: false,
   admin: null,
+  admins: [],
 };
 
 const authSlice = createSlice({
@@ -46,6 +49,18 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload as string;
         state.success = false;
+      })
+      .addCase(fetchAdminsAction.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchAdminsAction.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.admins = action.payload;
+      })
+      .addCase(fetchAdminsAction.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
       });
   },
 });
