@@ -19,10 +19,11 @@ import Logout from "@mui/icons-material/Logout";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import PeopleIcon from "@mui/icons-material/People";
 
-import Logo from "../../../assets/icons/Logo/logo.png";
+import Logo from "../../../assets/icons/Logo/logo-admin.png";
 import { ROUTES } from "../../../constants/routeConstants";
 import {
   drawerStyles,
+  listItemStyles,
   logoStyles,
   profileIaconContainer,
   profileIcon,
@@ -79,6 +80,7 @@ const Sidebar = () => {
           component={Link}
           to={ROUTES.BOOKINGS}
           selected={location.pathname === ROUTES.BOOKINGS}
+          sx={listItemStyles}
         >
           <ListItemIcon>
             <BookingsIcon />
@@ -90,6 +92,7 @@ const Sidebar = () => {
           component={Link}
           to={ROUTES.MENU}
           selected={location.pathname === ROUTES.MENU}
+          sx={listItemStyles}
         >
           <ListItemIcon>
             <MenuIcon />
@@ -101,6 +104,7 @@ const Sidebar = () => {
           component={Link}
           to={ROUTES.HISTORY}
           selected={location.pathname === ROUTES.HISTORY}
+          sx={listItemStyles}
         >
           <ListItemIcon>
             <HistoryIcon />
@@ -112,6 +116,7 @@ const Sidebar = () => {
           component={Link}
           to={ROUTES.TABLES}
           selected={location.pathname === ROUTES.TABLES}
+          sx={listItemStyles}
         >
           <ListItemIcon>
             <TableIcon />
@@ -123,6 +128,7 @@ const Sidebar = () => {
           component={Link}
           to={ROUTES.CREATE_ADMIN}
           selected={location.pathname === ROUTES.CREATE_ADMIN}
+          sx={listItemStyles}
         >
           <ListItemIcon>
             <PersonAddIcon />
@@ -134,6 +140,7 @@ const Sidebar = () => {
           component={Link}
           to={ROUTES.ADMINS}
           selected={location.pathname === ROUTES.ADMINS}
+          sx={listItemStyles}
         >
           <ListItemIcon>
             <PeopleIcon />
@@ -146,6 +153,7 @@ const Sidebar = () => {
           component={Link}
           to={ROUTES.LOGOUT}
           selected={location.pathname === ROUTES.LOGOUT}
+          sx={listItemStyles}
         >
           <ListItemIcon>
             <Logout />
