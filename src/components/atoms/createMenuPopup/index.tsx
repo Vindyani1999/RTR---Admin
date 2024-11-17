@@ -145,6 +145,7 @@ const NewMenuDialog: React.FC<NewMenuDialogProps> = ({
             display: "flex",
             flexDirection: "column",
             gap: 2,
+            mt: 0.5,
           }}
         >
           <TextField
@@ -156,18 +157,6 @@ const NewMenuDialog: React.FC<NewMenuDialogProps> = ({
             required
             error={!!errors.name}
             helperText={errors.name}
-            InputProps={{
-              sx: {
-                height: "36px",
-                fontSize: "0.875rem",
-              },
-            }}
-            InputLabelProps={{
-              sx: {
-                fontSize: "0.875rem",
-                transform: "translate(14px, 8px) scale(1)",
-              },
-            }}
           />
           <TextField
             label="Description"
@@ -178,22 +167,8 @@ const NewMenuDialog: React.FC<NewMenuDialogProps> = ({
             required
             error={!!errors.description}
             helperText={errors.description}
-            InputProps={{
-              sx: {
-                height: "36px",
-                fontSize: "0.875rem",
-                display: "flex",
-                alignItems: "center",
-                textAlign: "center",
-              },
-            }}
-            InputLabelProps={{
-              sx: {
-                fontSize: "0.875rem",
-                transform: "translate(14px, 8px) scale(1)",
-              },
-            }}
           />
+
           <TextField
             label="Price"
             name="price"
@@ -204,18 +179,6 @@ const NewMenuDialog: React.FC<NewMenuDialogProps> = ({
             required
             error={!!errors.price}
             helperText={errors.price}
-            InputProps={{
-              sx: {
-                height: "36px",
-                fontSize: "0.875rem",
-              },
-            }}
-            InputLabelProps={{
-              sx: {
-                fontSize: "0.875rem",
-                transform: "translate(14px, 8px) scale(1)",
-              },
-            }}
           />
           <Box>
             <Typography sx={{ fontSize: "0.75rem" }}>
