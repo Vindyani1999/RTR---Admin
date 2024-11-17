@@ -1,19 +1,31 @@
 import React, { useState } from "react";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid, Typography, Fab } from "@mui/material";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 import MenuCard from "../../atoms/MenuCard";
-import { menuItems } from "./mockData";
+import { menuItems as initialMenuItems } from "./mockData"; // Import initial data
 import SearchBar from "../../atoms/SearchBar";
+import NewMenuDialog from "../../atoms/createMenuPopup";
+import { MenuCardProps } from "../../atoms/MenuCard";
 
 const MenuItems: React.FC = () => {
+  const [menuItems, setMenuItems] = useState(initialMenuItems); // State for menu items
   const [searchTerm, setSearchTerm] = useState("");
+  const [openForm, setOpenForm] = useState(false);
 
-  // Filter menu items based on search term
+  // Filter items based on the search term
   const filteredItems = menuItems.filter((item) =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Handle saving the new menu item
+  const handleSave = (item: MenuCardProps) => {
+    setMenuItems((prevItems) => [...prevItems, { ...item, id: Date.now() }]); // Add new item with a unique ID
+    setOpenForm(false); // Close the dialog
+  };
+
   return (
     <>
+      {/* Header Section */}
       <Box
         sx={{
           position: "sticky",
@@ -38,6 +50,7 @@ const MenuItems: React.FC = () => {
         </Box>
       </Box>
 
+      {/* Menu Items Display */}
       <Box sx={{ maxHeight: "610px", overflowY: "auto" }}>
         <Grid container spacing={2}>
           {filteredItems.map((item) => (
@@ -50,11 +63,40 @@ const MenuItems: React.FC = () => {
                 category={
                   Array.isArray(item.category) ? item.category : [item.category]
                 }
+                handleDelete={() =>
+                  setMenuItems((prevItems) =>
+                    prevItems.filter((menuItem) => menuItem.id !== item.id)
+                  )
+                }
               />
             </Grid>
           ))}
         </Grid>
       </Box>
+
+      {/* Floating Button */}
+      <Fab
+        color="primary"
+        sx={{
+          position: "fixed",
+          bottom: 35,
+          right: 50,
+          backgroundColor: "darkred",
+          "&:hover": {
+            backgroundColor: "darkorange",
+          },
+        }}
+        onClick={() => setOpenForm(true)}
+      >
+        <AddCircleIcon sx={{ fontSize: 32 }} />
+      </Fab>
+
+      {/* New Menu Item Dialog */}
+      <NewMenuDialog
+        open={openForm}
+        onClose={() => setOpenForm(false)}
+        onSave={handleSave}
+      />
     </>
   );
 };
